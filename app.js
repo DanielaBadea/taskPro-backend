@@ -18,6 +18,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 const authRouter = require('./routes/auth');
 const needHelpRouter = require('./routes/help');
 
+app.get('/', (req, res) => {
+    res.json({ message: 'Welcome to Task Pro API!' });
+});
 app.use('/api/auth', authRouter);
 app.use('/api', needHelpRouter);
 
