@@ -21,13 +21,14 @@ const needHelpRouter = require('./routes/help');
 app.use('/api/auth', authRouter);
 app.use('/api', needHelpRouter);
 
-app.use((res) => {
-  res.status(404).json({ message: 'Not found' });
+app.use((req, res) => {
+    res.status(404).json({ message: 'Not found' });
 });
 
-app.use((err, res) => {
+app.use((err, req, res, next) => {
     console.error('Error occurred:', err.message);
     console.error('Stack trace:', err.stack);
-    res.status(500).send('Something broke!'); 
+  res.status(500).json({ message: 'Something broke!' });
 });
+
 module.exports = app;
