@@ -1,4 +1,5 @@
 const { validateReg, validateLogin } = require('../validations/User');
+const validate = require('../validations/NeedHelp');
 
 const validateRegistration = (req, res, next) => {
     const { error } = validateReg(req.body);
@@ -18,4 +19,11 @@ const validateLogIn = (req, res, next) => {
     next()
 };
 
-module.exports = { validateRegistration, validateLogIn };
+const validateHelp = (req, res, next) => {
+    const { error } = validate(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details.map(detail => detail.message) });
+    }
+    next()
+};
+module.exports = { validateRegistration, validateLogIn, validateHelp};
