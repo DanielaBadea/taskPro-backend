@@ -14,10 +14,10 @@ const options = {
                 url: 'http://localhost:3000',
                 description: 'Local API base URL',
             },
-            // {
-            //     url: 'https://slim-moom.goit.global',
-            //     description: 'Production API base URL',
-            // },
+            {
+                url: 'https://taskpro-app-bcac9d37037a.herokuapp.com/ ',
+                description: 'Heroku API base URL',
+            },
         ],
     },
     
