@@ -41,7 +41,7 @@ const upload = require('../services/cloudinary');
 
 /**
  * @swagger
- * /api/users/register:
+ * api/users/register:
  *   post:
  *     summary: Register a new user
  *     requestBody:
@@ -71,7 +71,7 @@ const upload = require('../services/cloudinary');
 
 /**
  * @swagger
- * /api/users/login:
+ * api/users/login:
  *   post:
  *     summary: Login a user
  *     requestBody:
@@ -112,7 +112,7 @@ const upload = require('../services/cloudinary');
 
 /**
  * @swagger
- * /api/users/current:
+ * api/users/current:
  *   get:
  *     summary: Get current user info
  *     security:
@@ -135,7 +135,7 @@ const upload = require('../services/cloudinary');
 
 /**
  * @swagger
- * /api/users/update:
+ * api/users/update:
  *   patch:
  *     summary: Update user profile
  *     security:
@@ -181,7 +181,7 @@ const upload = require('../services/cloudinary');
 
 /**
  * @swagger
- * /api/users/change-theme:
+ * api/users/change-theme:
  *   patch:
  *     summary: Change user theme
  *     security:
@@ -223,7 +223,7 @@ const upload = require('../services/cloudinary');
 
 /**
  * @swagger
- * /api/users/logout:
+ * api/users/logout:
  *   get:
  *     summary: Logout user
  *     security:

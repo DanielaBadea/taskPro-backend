@@ -27,7 +27,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 /**
  * @swagger
- * /api/need-help:
+ * api/need-help:
  *   post:
  *     summary: Submit a help request
  *     security:
