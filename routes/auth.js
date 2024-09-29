@@ -3,7 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require("../models/User");
 const auth = require('../middlewares/auth');
-const { validateRegistration, validateLogIn } = require('../middlewares/validationJoi');
+const { validateRegistration, validateLogIn, validateBackgroundImage} = require('../middlewares/validationJoi');
 require('dotenv').config();
 const gravatar = require('gravatar');
 const upload = require('../services/cloudinary');
@@ -32,6 +32,9 @@ const upload = require('../services/cloudinary');
  *           type: string
  *           enum: [light, dark, violet]
  *           default: dark
+ *         backgroundImage:
+ *           type: string
+ *           example: bg_tablet15@1x.png
  *     Token:
  *       type: object
  *       properties:
@@ -243,6 +246,43 @@ const upload = require('../services/cloudinary');
  *         description: Internal Server Error
  */
 
+/**
+ * @swagger
+ * /users/{userId}/set-background:
+ *   patch:
+ *     summary: Set a background image for the user
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the user
+ *       - in: body
+ *         name: User
+ *         description: User object with the background image field
+ *         schema:
+ *           $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: Successfully set up background image
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Succesfully setup background image!
+ *                 backgroundImage:
+ *                   type: string
+ *                   example: /images/bg_desktop1@1x.png
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
 
 // REGISTER
 
@@ -286,7 +326,6 @@ router.post('/register', validateRegistration, async (req, res, next) => {
 router.post('/login', validateLogIn, async (req, res, next) => {
     try {
         const { email, password } = req.body;
-
         const user = await User.findOne({ email });
         if (!user) {
             console.error("User not found with email:", email);
@@ -439,5 +478,29 @@ router.get('/logout', auth, async (req, res, next) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 })
+
+// SET BACKROUND
+router.patch('/users/:userId/set-background',auth, validateBackgroundImage, async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { backgroundImage } = req.body;
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: `The user with id ${userId} not found!` });
+        }
+
+        const imageUrl = `/images/${backgroundImage}`;
+        user.backgroundImage = imageUrl; 
+        await user.save();
+
+        res.status(200).json({
+            message: 'Succesfully setup background image!',
+            backgroundImage: imageUrl
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Eroare server', error });
+    }
+});
 
 module.exports = router;

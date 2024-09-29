@@ -1,4 +1,4 @@
-const { validateReg, validateLogin } = require('../validations/User');
+const { validateReg, validateLogin, validateBackground } = require('../validations/User');
 const validate = require('../validations/NeedHelp');
 
 const validateRegistration = (req, res, next) => {
@@ -26,4 +26,12 @@ const validateHelp = (req, res, next) => {
     }
     next()
 };
-module.exports = { validateRegistration, validateLogIn, validateHelp};
+
+const validateBackgroundImage = (req, res, next) => {
+    const { error } = validateBackground(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details.map(detail => detail.message) });
+    }
+    next()
+}
+module.exports = { validateRegistration, validateLogIn, validateHelp , validateBackgroundImage};

@@ -31,6 +31,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['light', 'dark', 'violet'],
         default: 'dark',
+    },
+    backgroundImage: {
+        type: String,
+        default: null
     }
 }, {
     versionKey: false,

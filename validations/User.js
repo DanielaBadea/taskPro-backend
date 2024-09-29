@@ -33,6 +33,14 @@ const loginSchema = Joi.object({
     })
 });
 
+const backgroundSchema = Joi.object({
+    // allow(null) - Permitem ca valoarea sa fie si null - permite campului sa fie gol sau sa nu aiba o imagine de fundal setata
+    backgroundImage: Joi.string().allow(null).optional().messages({
+        'string.base': '{{#label}} trebuie să fie un șir de caractere',
+        'any.allowOnly': '{{#label}} poate fi null sau un string valid',
+        'any.optional': '{{#label}} este opțional'
+    })
+});
 
 const validateReg = (user) => {
     return registerSchema.validate(user, { abortEarly: false }); 
@@ -42,4 +50,8 @@ const validateLogin = (user) => {
     return loginSchema.validate(user, { abortEarly: false }); 
 };
 
-module.exports = { validateReg, validateLogin };
+const validateBackground = (image) => {
+    return backgroundSchema.validate(image, { abortEarly: false })
+};
+
+module.exports = { validateReg, validateLogin, validateBackground };
