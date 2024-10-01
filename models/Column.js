@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 export const columnSchema = new mongoose.Schema({
     name: {
         type: String,
-        enum: ['To Do', 'In Progress', 'Done'],
+        // enum: ['To Do', 'In Progress', 'Done'],
         default: 'To Do',
         required: true
     },
