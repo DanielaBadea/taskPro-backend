@@ -44,36 +44,6 @@ const upload = require('../services/cloudinary');
 
 /**
  * @swagger
- * /api/auth/register:
- *   post:
- *     summary: Register a new user
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/User'
- *     responses:
- *       201:
- *         description: User registered successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Successful registration!
- *                 user:
- *                   $ref: '#/components/schemas/User'
- *       409:
- *         description: Email already registered
- *       500:
- *         description: Internal Server Error
- */
-
-/**
- * @swagger
  * /api/auth/login:
  *   post:
  *     summary: Login a user
@@ -102,11 +72,21 @@ const upload = require('../services/cloudinary');
  *                   type: string
  *                   example: Welcome Popescu Andrei
  *                 user:
- *                   $ref: '#/components/schemas/User'
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       example: Popescu Andrei
+ *                     email:
+ *                       type: string
+ *                       example: popescu.andrei@example.com
+ *                     avatarURL:
+ *                       type: string
+ *                       example: https://s.gravatar.com/avatar/9ee8e7efa028126684cca6848403a097?s=250&r=pg&d=monsterid
  *                 token:
  *                   type: string
  *       401:
- *         description : Not authorized
+ *         description: Not authorized
  *       409:
  *         description: Email or password is wrong
  *       500:
@@ -129,9 +109,19 @@ const upload = require('../services/cloudinary');
  *               type: object
  *               properties:
  *                 user:
- *                   $ref: '#/components/schemas/User'
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       example: Popescu Andrei
+ *                     avatarURL:
+ *                       type: string
+ *                       example: https://s.gravatar.com/avatar/9ee8e7efa028126684cca6848403a097?s=250&r=pg&d=monsterid
+ *                     theme:
+ *                       type: string
+ *                       example: dark
  *       401:
- *         description : Not authorized
+ *         description: Not authorized
  *       500:
  *         description: Internal Server Error
  */
@@ -173,9 +163,19 @@ const upload = require('../services/cloudinary');
  *                   type: string
  *                   example: Successfully data updated!
  *                 update:
- *                   $ref: '#/components/schemas/User'
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       example: Popescu David
+ *                     email:
+ *                       type: string
+ *                       example: popescu.david@example.com
+ *                     avatarURL:
+ *                       type: string
+ *                       example: https://s.gravatar.com/avatar/9ee8e7efa028126684cca6848403a097?s=250&r=pg&d=monsterid
  *       401:
- *          description : Not authorized
+ *         description: Not authorized
  *       409:
  *         description: Email already registered
  *       500:
@@ -217,7 +217,7 @@ const upload = require('../services/cloudinary');
  *                   type: string
  *                   example: violet
  *       401:
- *          description : Not authorized
+ *         description: Not authorized
  *       400:
  *         description: Invalid theme
  *       500:
@@ -261,16 +261,15 @@ const upload = require('../services/cloudinary');
  *           type: string
  *         required: true
  *         description: The ID of the user
- *       - in: body
- *         name: User
- *         description: User object with the background image field
- *         schema:
- *               type: object
- *               properties:
- *                 backgroundImage:
- *                   type: string
- *                   example: /images/bg_desktop1@1x.png
- *          
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               backgroundImage:
+ *                 type: string
+ *                 example: bg_desktop1@1x.png
  *     responses:
  *       200:
  *         description: Successfully set up background image
@@ -281,7 +280,7 @@ const upload = require('../services/cloudinary');
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Succesfully setup background image!
+ *                   example: Successfully setup background image!
  *                 backgroundImage:
  *                   type: string
  *                   example: /images/bg_desktop1@1x.png
@@ -292,6 +291,7 @@ const upload = require('../services/cloudinary');
  *       500:
  *         description: Server error
  */
+
 
 // REGISTER
 
