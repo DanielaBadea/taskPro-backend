@@ -252,6 +252,8 @@ const upload = require('../services/cloudinary');
  *   patch:
  *     summary: Set a background image for the user
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: userId
@@ -263,7 +265,12 @@ const upload = require('../services/cloudinary');
  *         name: User
  *         description: User object with the background image field
  *         schema:
- *           $ref: '#/components/schemas/User'
+ *               type: object
+ *               properties:
+ *                 backgroundImage:
+ *                   type: string
+ *                   example: /images/bg_desktop1@1x.png
+ *          
  *     responses:
  *       200:
  *         description: Successfully set up background image
@@ -278,6 +285,8 @@ const upload = require('../services/cloudinary');
  *                 backgroundImage:
  *                   type: string
  *                   example: /images/bg_desktop1@1x.png
+ *       401:
+ *         description: Not authorized
  *       404:
  *         description: User not found
  *       500:
