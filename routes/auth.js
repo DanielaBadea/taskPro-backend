@@ -41,6 +41,72 @@ const upload = require('../services/cloudinary');
  *         token:
  *           type: string
  */
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Popescu Andrei
+ *               email:
+ *                 type: string
+ *                 example: popescu.andrei@example.com
+ *               password:
+ *                 type: string
+ *                 example: securepassword
+ *     responses:
+ *       201:
+ *         description: User successfully registered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Successful registration!
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       example: Popescu Andrei
+ *                     email:
+ *                       type: string
+ *                       example: popescu.andrei@example.com
+ *                     avatarURL:
+ *                       type: string
+ *                       example: https://s.gravatar.com/avatar/9ee8e7efa028126684cca6848403a097?s=250&r=pg&d=monsterid
+ *       409:
+ *         description: Email already registered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Email already registered!
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
+ */
+
 
 /**
  * @swagger
