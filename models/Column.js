@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+let Card = require('./Card');
 
-export const columnSchema = new mongoose.Schema({
+const columnSchema = new mongoose.Schema({
     name: {
         type: String,
         // enum: ['To Do', 'In Progress', 'Done'],
@@ -15,6 +16,11 @@ export const columnSchema = new mongoose.Schema({
     {
         versionKey: false
     });
+
+columnSchema.pre('remove', async function (next) {
+    await Card.deleteMany({ _id: { $in: this.cards } });
+    next();
+});
 
 const Column = mongoose.model('Column', columnSchema);
 

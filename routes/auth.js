@@ -3,7 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require("../models/User");
 const auth = require('../middlewares/auth');
-const { validateRegistration, validateLogIn, validateBackgroundImage} = require('../middlewares/validationJoi');
+const { validateRegistration, validateLogIn, validateBackgroundImage } = require('../middlewares/validationJoi');
 require('dotenv').config();
 const gravatar = require('gravatar');
 const upload = require('../services/cloudinary');
@@ -44,9 +44,10 @@ const upload = require('../services/cloudinary');
 
 /**
  * @swagger
- * api/users/register:
+ * api/auth/register:
  *   post:
  *     summary: Register a new user
+ *     tags: [Auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -74,9 +75,10 @@ const upload = require('../services/cloudinary');
 
 /**
  * @swagger
- * api/users/login:
+ * api/auth/login:
  *   post:
  *     summary: Login a user
+ *     tags: [Auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -115,9 +117,10 @@ const upload = require('../services/cloudinary');
 
 /**
  * @swagger
- * api/users/current:
+ * api/auth/current:
  *   get:
  *     summary: Get current user info
+ *     tags: [Auth]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -138,9 +141,10 @@ const upload = require('../services/cloudinary');
 
 /**
  * @swagger
- * api/users/update:
+ * api/auth/update:
  *   patch:
  *     summary: Update user profile
+ *     tags: [Auth]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -184,9 +188,10 @@ const upload = require('../services/cloudinary');
 
 /**
  * @swagger
- * api/users/change-theme:
+ * api/auth/change-theme:
  *   patch:
  *     summary: Change user theme
+ *     tags: [Auth]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -226,9 +231,10 @@ const upload = require('../services/cloudinary');
 
 /**
  * @swagger
- * api/users/logout:
+ * api/auth/logout:
  *   get:
  *     summary: Logout user
+ *     tags: [Auth]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -314,9 +320,9 @@ router.post('/register', validateRegistration, async (req, res, next) => {
                 avatarURL: newUser.avatarURL,
             }
         });
-        
+
     } catch (error) {
-         console.error("Error during register:", error);
+        console.error("Error during register:", error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
@@ -354,7 +360,7 @@ router.post('/login', validateLogIn, async (req, res, next) => {
             },
             token
         });
-        
+
     } catch (error) {
         console.error("Error during login:", error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -365,7 +371,7 @@ router.post('/login', validateLogIn, async (req, res, next) => {
 
 router.get('/current', auth, async (req, res, next) => {
     try {
-        const { name, avatarURL, theme} = req.user;
+        const { name, avatarURL, theme } = req.user;
 
         res.json({
             user: {
@@ -374,7 +380,7 @@ router.get('/current', auth, async (req, res, next) => {
                 theme,
             }
         });
-        
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -419,7 +425,7 @@ router.patch('/update', auth, upload.single('avatar'), async (req, res, next) =>
                 avatarURL: user.avatarURL
             }
         });
-        
+
     } catch (error) {
         console.error("Error during update:", error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -430,9 +436,9 @@ router.patch('/update', auth, upload.single('avatar'), async (req, res, next) =>
 
 router.patch('/change-theme', auth, async (req, res, next) => {
     try {
-        const { theme } = req.body; 
+        const { theme } = req.body;
         const userId = req.user._id;
-        
+
         const availableThemes = ['light', 'dark', 'violet'];
 
         const themeIndex = availableThemes.findIndex(t => t === theme);
@@ -471,7 +477,7 @@ router.get('/logout', auth, async (req, res, next) => {
         user.token = null;
         await user.save();
 
-        res.status(200).json({message: 'Successfully logged out!'})
+        res.status(200).json({ message: 'Successfully logged out!' })
 
     } catch (error) {
         console.error("Error during logout:", error);

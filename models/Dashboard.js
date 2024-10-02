@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { sluggerPlugin } = require('mongoose-slugger-plugin');
+let Column = require('./Column')
 
 const dashboardSchema = new mongoose.Schema({
     owner: {
@@ -23,6 +24,11 @@ const dashboardSchema = new mongoose.Schema({
 }, {
     timestamps: true,
     versionKey: false
+});
+
+dashboardSchema.pre('remove', async function (next) {
+    await Column.deleteMany({ _id: { $in: this.columns } });
+    next();
 });
 
 dashboardSchema.index({ owner: 1, slug: 1 }, { name: 'owner_slug', unique: true });
