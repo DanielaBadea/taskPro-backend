@@ -41,6 +41,7 @@ const upload = require('../services/cloudinary');
  *         token:
  *           type: string
  */
+
 /**
  * @swagger
  * /api/auth/register:
@@ -107,7 +108,6 @@ const upload = require('../services/cloudinary');
  *                   example: Internal Server Error
  */
 
-
 /**
  * @swagger
  * /api/auth/login:
@@ -151,12 +151,26 @@ const upload = require('../services/cloudinary');
  *                       example: https://s.gravatar.com/avatar/9ee8e7efa028126684cca6848403a097?s=250&r=pg&d=monsterid
  *                 token:
  *                   type: string
- *       401:
- *         description: Not authorized
  *       409:
- *         description: Email or password is wrong
+ *         description: Email already registered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Email already registered!
  *       500:
  *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
  */
 
 /**
@@ -188,8 +202,24 @@ const upload = require('../services/cloudinary');
  *                       example: dark
  *       401:
  *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Not authorized
  *       500:
  *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
  */
 
 /**
@@ -217,6 +247,7 @@ const upload = require('../services/cloudinary');
  *                 example: newsecurepassword
  *               avatar:
  *                 type: string
+ *                 example: andrei.png  
  *     responses:
  *       200:
  *         description: User data updated successfully
@@ -239,14 +270,39 @@ const upload = require('../services/cloudinary');
  *                       example: popescu.david@example.com
  *                     avatarURL:
  *                       type: string
- *                       example: https://s.gravatar.com/avatar/9ee8e7efa028126684cca6848403a097?s=250&r=pg&d=monsterid
+ *                       example: https://res.cloudinary.com/dnz7pbr52/image/upload/v1727929062/user_avatars/wp6dgvm9o8jvpstiob5z.jpg
  *       401:
  *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Not authorized
  *       409:
  *         description: Email already registered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Email already registered!
  *       500:
  *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
  */
+
 
 /**
  * @swagger
@@ -264,7 +320,8 @@ const upload = require('../services/cloudinary');
  *             properties:
  *               theme:
  *                 type: string
- *                 enum: [light, dark, violet]
+ *                 example: violet
+ * 
  *     responses:
  *       200:
  *         description: Theme updated successfully
@@ -284,10 +341,34 @@ const upload = require('../services/cloudinary');
  *                   example: violet
  *       401:
  *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Not authorized
  *       400:
  *         description: Invalid theme
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Invalid theme
  *       500:
  *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
  */
 
 /**
@@ -307,9 +388,17 @@ const upload = require('../services/cloudinary');
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Successfully logged out!
+ *                   example: Successfully logged out
  *       500:
  *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
  */
 
 /**
@@ -352,10 +441,34 @@ const upload = require('../services/cloudinary');
  *                   example: /images/bg_desktop1@1x.png
  *       401:
  *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Not authorized
  *       404:
  *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User not found
  *       500:
- *         description: Server error
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
  */
 
 
