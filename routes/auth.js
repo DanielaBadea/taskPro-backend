@@ -44,7 +44,7 @@ const upload = require('../services/cloudinary');
 
 /**
  * @swagger
- * api/auth/register:
+ * /api/auth/register:
  *   post:
  *     summary: Register a new user
  *     tags: [Auth]
@@ -53,10 +53,20 @@ const upload = require('../services/cloudinary');
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Popescu Andrei
+ *               email:
+ *                 type: string
+ *                 example: popescu.andrei@example.com
+ *               password:
+ *                 type: string
+ *                 example: securepassword
  *     responses:
  *       201:
- *         description: User registered successfully
+ *         description: User successfully registered
  *         content:
  *           application/json:
  *             schema:
@@ -66,16 +76,42 @@ const upload = require('../services/cloudinary');
  *                   type: string
  *                   example: Successful registration!
  *                 user:
- *                   $ref: '#/components/schemas/User'
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       example: Popescu Andrei
+ *                     email:
+ *                       type: string
+ *                       example: popescu.andrei@example.com
+ *                     avatarURL:
+ *                       type: string
+ *                       example: https://s.gravatar.com/avatar/9ee8e7efa028126684cca6848403a097?s=250&r=pg&d=monsterid
  *       409:
  *         description: Email already registered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Email already registered!
  *       500:
  *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
  */
 
 /**
  * @swagger
- * api/auth/login:
+ * /api/auth/login:
  *   post:
  *     summary: Login a user
  *     tags: [Auth]
@@ -104,20 +140,44 @@ const upload = require('../services/cloudinary');
  *                   type: string
  *                   example: Welcome Popescu Andrei
  *                 user:
- *                   $ref: '#/components/schemas/User'
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       example: Popescu Andrei
+ *                     email:
+ *                       type: string
+ *                       example: popescu.andrei@example.com
+ *                     avatarURL:
+ *                       type: string
+ *                       example: https://s.gravatar.com/avatar/9ee8e7efa028126684cca6848403a097?s=250&r=pg&d=monsterid
  *                 token:
  *                   type: string
- *       401:
- *         description : Not authorized
  *       409:
- *         description: Email or password is wrong
+ *         description: Email already registered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Email already registered!
  *       500:
  *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
  */
 
 /**
  * @swagger
- * api/auth/current:
+ * /api/auth/current:
  *   get:
  *     summary: Get current user info
  *     tags: [Auth]
@@ -132,16 +192,42 @@ const upload = require('../services/cloudinary');
  *               type: object
  *               properties:
  *                 user:
- *                   $ref: '#/components/schemas/User'
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       example: Popescu Andrei
+ *                     avatarURL:
+ *                       type: string
+ *                       example: https://s.gravatar.com/avatar/9ee8e7efa028126684cca6848403a097?s=250&r=pg&d=monsterid
+ *                     theme:
+ *                       type: string
+ *                       example: dark
  *       401:
- *         description : Not authorized
+ *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Not authorized
  *       500:
  *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
  */
 
 /**
  * @swagger
- * api/auth/update:
+ * /api/auth/update:
  *   patch:
  *     summary: Update user profile
  *     tags: [Auth]
@@ -165,6 +251,7 @@ const upload = require('../services/cloudinary');
  *                 example: newsecurepassword
  *               avatar:
  *                 type: string
+ *                 example: andrei.png  
  *     responses:
  *       200:
  *         description: User data updated successfully
@@ -177,18 +264,53 @@ const upload = require('../services/cloudinary');
  *                   type: string
  *                   example: Successfully data updated!
  *                 update:
- *                   $ref: '#/components/schemas/User'
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       example: Popescu David
+ *                     email:
+ *                       type: string
+ *                       example: popescu.david@example.com
+ *                     avatarURL:
+ *                       type: string
+ *                       example: https://res.cloudinary.com/dnz7pbr52/image/upload/v1727929062/user_avatars/wp6dgvm9o8jvpstiob5z.jpg
  *       401:
- *          description : Not authorized
+ *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Not authorized
  *       409:
  *         description: Email already registered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Email already registered!
  *       500:
  *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
  */
+
 
 /**
  * @swagger
- * api/auth/change-theme:
+ * /api/auth/change-theme:
  *   patch:
  *     summary: Change user theme
  *     tags: [Auth]
@@ -203,7 +325,8 @@ const upload = require('../services/cloudinary');
  *             properties:
  *               theme:
  *                 type: string
- *                 enum: [light, dark, violet]
+ *                 example: violet
+ * 
  *     responses:
  *       200:
  *         description: Theme updated successfully
@@ -222,16 +345,40 @@ const upload = require('../services/cloudinary');
  *                   type: string
  *                   example: violet
  *       401:
- *          description : Not authorized
+ *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Not authorized
  *       400:
  *         description: Invalid theme
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Invalid theme
  *       500:
  *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
  */
 
 /**
  * @swagger
- * api/auth/logout:
+ * /api/auth/logout:
  *   get:
  *     summary: Logout user
  *     tags: [Auth]
@@ -247,17 +394,27 @@ const upload = require('../services/cloudinary');
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Successfully logged out!
+ *                   example: Successfully logged out
  *       500:
  *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
  */
 
 /**
  * @swagger
- * /users/{userId}/set-background:
+ * /api/auth/users/{userId}/set-background:
  *   patch:
  *     summary: Set a background image for the user
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: userId
@@ -265,11 +422,15 @@ const upload = require('../services/cloudinary');
  *           type: string
  *         required: true
  *         description: The ID of the user
- *       - in: body
- *         name: User
- *         description: User object with the background image field
- *         schema:
- *           $ref: '#/components/schemas/User'
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               backgroundImage:
+ *                 type: string
+ *                 example: bg_desktop1@1x.png
  *     responses:
  *       200:
  *         description: Successfully set up background image
@@ -280,15 +441,42 @@ const upload = require('../services/cloudinary');
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Succesfully setup background image!
+ *                   example: Successfully setup background image!
  *                 backgroundImage:
  *                   type: string
  *                   example: /images/bg_desktop1@1x.png
+ *       401:
+ *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Not authorized
  *       404:
  *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User not found
  *       500:
- *         description: Server error
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
  */
+
 
 // REGISTER
 
@@ -486,7 +674,7 @@ router.get('/logout', auth, async (req, res, next) => {
 })
 
 // SET BACKROUND
-router.patch('/users/:userId/set-background',auth, validateBackgroundImage, async (req, res) => {
+router.patch('/users/:userId/set-background', auth, validateBackgroundImage, async (req, res) => {
     try {
         const { userId } = req.params;
         const { backgroundImage } = req.body;
@@ -497,7 +685,7 @@ router.patch('/users/:userId/set-background',auth, validateBackgroundImage, asyn
         }
 
         const imageUrl = `/images/${backgroundImage}`;
-        user.backgroundImage = imageUrl; 
+        user.backgroundImage = imageUrl;
         await user.save();
 
         res.status(200).json({

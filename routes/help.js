@@ -27,7 +27,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 /**
  * @swagger
- * api/need-help:
+ * /api/need-help:
  *   post:
  *     summary: Submit a help request
  *     security:
@@ -57,9 +57,26 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
  *                   example: Email sent successfully!
  *       401:
  *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Not authorized
  *       500:
  *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal Server Error
  */
+
 
 
 router.post('/need-help', auth, validateHelp, async (req, res) => {
