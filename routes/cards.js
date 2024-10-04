@@ -2,6 +2,8 @@ const auth = require('../middlewares/auth');
 const Dashboard = require('../models/Dashboard');
 const Column = require('../models/Column');
 const Card = require('../models/Card');
+const { columnSchema, cardSchema } = require('../validations/Board');
+const Joi = require('joi');
 
 function moveElement(array, from, to) {
     if (from < 0) return;
@@ -22,49 +24,51 @@ const findBoard = async (req, res, next) => {
     }
 };
 
-module.exports = router => {
+module.exports = (router, validate) => {
 
-    router.post('/boards/:boardName/column', auth, findBoard, async (req, res) => {
-        const dashboard = req.dashboard;
-        const { name } = req.body;
-        try {
-            const newColumn = new Column({
-                name, cards: []
-            });
+    router.post('/boards/:boardName/column', auth, findBoard, validate({
+        body: columnSchema
+    }),
+        async (req, res, next) => {
+            const dashboard = req.dashboard;
+            const { name } = req.body;
+            try {
+                const newColumn = new Column({
+                    name, cards: []
+                });
 
-            await newColumn.save();
+                await newColumn.save();
 
-            dashboard.columns.push(newColumn);
-            // dashboard.markModified('columns');
-            await dashboard.save();
+                dashboard.columns.push(newColumn);
+                await dashboard.save();
 
-            res.status(200).json(newColumn);
-        } catch (message) {
-            res.status(500).json({ message });
-        }
-    });
+                res.status(200).json(newColumn);
+            } catch (message) { next(message); }
+        });
 
-    router.patch('/boards/:boardName/column/:id', auth, findBoard, async (req, res) => {
+    router.patch('/boards/:boardName/column/:id', auth, findBoard, validate({
+        body: columnSchema.keys({ position: Joi.number().integer() })
+    }), async (req, res, next) => {
         const dashboard = req.dashboard;
         const columnId = req.params.id;
         const { name, position } = req.body;
         try {
+            let result = null;
             if (name) {
                 const column = await Column.findByIdAndUpdate(columnId, { name });
-                res.status(200).json(column);
+                result = column;
             }
-            if (position) {
+            if (position !== undefined) {
                 const { columns } = dashboard;
                 moveElement(columns, columns.indexOf(columnId), position);
                 await dashboard.save();
-                res.status(200).json(columns);
+                result = columns;
             }
-        } catch (message) {
-            res.status(500).json({ message });
-        }
+            res.status(200).json(result);
+        } catch (message) { next(message); }
     });
 
-    router.delete('/boards/:boardName/column/:id', auth, findBoard, async (req, res) => {
+    router.delete('/boards/:boardName/column/:id', auth, findBoard, async (req, res, next) => {
         const dashboard = req.dashboard;
         const columnId = req.params.id;
 
@@ -74,15 +78,18 @@ module.exports = router => {
                 return res.status(404).json({ message: 'Column not found' });
             }
             dashboard.columns.splice(dashboard.columns.indexOf(columnId), 1);
-            await dashboard.save();
+            await Promise.all([
+                Card.deleteMany({ _id: { $in: column.cards } }),
+                dashboard.save()
+            ]);
             res.status(200).json({ message: 'Column deleted successfully' });
-        } catch (message) {
-            res.status(500).json({ message });
-        }
+        } catch (message) { next(message); }
     });
 
 
-    router.post('/boards/:boardName/column/:id', auth, findBoard, async (req, res) => {
+    router.post('/boards/:boardName/column/:id', auth, findBoard, validate({
+        body: cardSchema.fork(['columnId'], (schema) => schema.forbidden())
+    }), async (req, res, next) => {
         const dashboard = req.dashboard;
         const columnId = req.params.id;
         const { title } = req.body;
@@ -104,12 +111,12 @@ module.exports = router => {
             await newCard.save();
             await column.save();
             res.status(200).json(newCard);
-        } catch (message) {
-            res.status(500).json({ message });
-        }
+        } catch (message) { next(message); }
     });
 
-    router.patch('/boards/:boardName/:id', auth, findBoard, async (req, res) => {
+    router.patch('/boards/:boardName/:id', auth, findBoard, validate({
+        body: cardSchema.fork(['columnId', 'title'], (schema) => schema.optional())
+    }), async (req, res, next) => {
         const dashboard = req.dashboard;
         const cardId = req.params.id;
 
@@ -141,12 +148,10 @@ module.exports = router => {
             promises.push(card.save());
             await Promise.all(promises)
             res.status(200).json(card);
-        } catch (message) {
-            res.status(500).json({ message });
-        }
+        } catch (message) { next(message); }
     });
 
-    router.delete('/boards/:boardName/:id', auth, findBoard, async (req, res) => {
+    router.delete('/boards/:boardName/:id', auth, findBoard, async (req, res, next) => {
         const dashboard = req.dashboard;
         const cardId = req.params.id;
 
@@ -168,8 +173,6 @@ module.exports = router => {
             }
             await Promise.all(promises);
             res.status(200).json({ message: 'Card deleted successfully' });
-        } catch (message) {
-            res.status(500).json({ message });
-        }
+        } catch (message) { next(message); }
     });
 }    

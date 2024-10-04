@@ -26,10 +26,10 @@ const dashboardSchema = new mongoose.Schema({
     versionKey: false
 });
 
-dashboardSchema.pre('remove', async function (next) {
+/* dashboardSchema.pre('deleteOne', async function (next) {
     await Column.deleteMany({ _id: { $in: this.columns } });
     next();
-});
+}); */
 
 dashboardSchema.index({ owner: 1, slug: 1 }, { name: 'owner_slug', unique: true });
 

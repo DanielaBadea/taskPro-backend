@@ -35,7 +35,7 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
     console.error('Error occurred:', err.message);
     console.error('Stack trace:', err.stack);
-    res.status(500).json({ message: 'Something broke!' });
+    res.status(500).json({ message: 'Internal Server Error' });
 });
 
 module.exports = app;
