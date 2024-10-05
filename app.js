@@ -19,12 +19,14 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 const authRouter = require('./routes/auth');
 const needHelpRouter = require('./routes/help');
+const boardRouter = require('./routes/board');
 
 app.get('/', (req, res) => {
     res.json({ message: 'Welcome to Task Pro API!' });
 });
 app.use('/api/auth', authRouter);
 app.use('/api', needHelpRouter);
+app.use('/api', boardRouter);
 
 app.use((req, res) => {
     res.status(404).json({ message: 'Not found' });
@@ -33,7 +35,7 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
     console.error('Error occurred:', err.message);
     console.error('Stack trace:', err.stack);
-  res.status(500).json({ message: 'Something broke!' });
+    res.status(500).json({ message: 'Internal Server Error' });
 });
 
 module.exports = app;

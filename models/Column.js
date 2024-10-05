@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
+let Card = require('./Card');
 
-export const columnSchema = new mongoose.Schema({
+const columnSchema = new mongoose.Schema({
     name: {
         type: String,
-        enum: ['To Do', 'In Progress', 'Done'],
+        // enum: ['To Do', 'In Progress', 'Done'],
         default: 'To Do',
         required: true
     },

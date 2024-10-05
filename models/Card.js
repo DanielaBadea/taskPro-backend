@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-export const cardSchema = new mongoose.Schema({
+const cardSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true
@@ -11,8 +11,8 @@ export const cardSchema = new mongoose.Schema({
     },
     priority: {
         type: String,
-        enum: ['low', 'medium', 'high'],
-        default: 'low'
+        enum: ['none', 'low', 'medium', 'high'],
+        default: 'none'
     },
     deadline: {
         type: Date,
@@ -21,7 +21,8 @@ export const cardSchema = new mongoose.Schema({
     columnId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Column',
-        required: true
+        required: true,
+        // index: true
     }
 }, {
     versionKey: false
