@@ -5,6 +5,462 @@ const Card = require('../models/Card');
 const { columnSchema, cardSchema } = require('../validations/Board');
 const Joi = require('joi');
 
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Column:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           example: "To Do"
+ *         cards:
+ *           type: array
+ *           items: 
+ *              type: string
+ *              example: []
+ * 
+ *     Card:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *           example: "Task Title"
+ *         description:
+ *           type: string
+ *           example: "Task Description"
+ *         priority:
+ *           type: string
+ *           enum: ['none', 'low', 'medium', 'high']
+ *           example: "medium"
+ *         deadline:
+ *           type: string
+ *           format: date
+ *           example: "2024-12-01"
+ *         columnId:
+ *           type: string
+ *           example: "6100ffee863a269063ba0660"
+ */
+
+/**
+ * @swagger
+ * /api/boards/{boardName}/column:
+ *   post:
+ *     summary: Add a new column to the board
+ *     security: 
+ *       - bearerAuth: []
+ *     tags: [Columns]
+ *     parameters:
+ *       - in: path
+ *         name: boardName
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: "my-dashboard"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "to do"
+ *     responses:
+ *       200:
+ *         description: New column added
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 name:
+ *                   type: string
+ *                   example: "to do"
+ *                 cards:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: []
+ *                 _id:
+ *                   type: string
+ *                   example: "670117b5863a269063ba0673"
+ *       404:
+ *         description: Dashboard not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Dashboard not found"
+ *       401:
+ *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Not authorized"
+ */
+
+/**
+ * @swagger
+ * /api/boards/{boardName}/column/{id}:
+ *   patch:
+ *     summary: Update a column in the board
+ *     security: 
+ *       - bearerAuth: []
+ *     tags: [Columns]
+ *     parameters:
+ *       - in: path
+ *         name: boardName
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: "my-dashboard"
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: "670117b5863a269063ba0673"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "In progress"
+ *     responses:
+ *       200:
+ *         description: Column updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   example: "670117b5863a269063ba0673"
+ *                 name:
+ *                   type: string
+ *                   example: "In progress"
+ *                 cards:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: []
+ *       404:
+ *         description: Column or board not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Column or board not found"
+ *       401:
+ *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Not authorized"
+ */
+
+/**
+ * @swagger
+ * /api/boards/{boardName}/column/{id}:
+ *   delete:
+ *     summary: Delete a column
+ *     security: 
+ *       - bearerAuth: []
+ *     tags: [Columns]
+ *     parameters:
+ *       - in: path
+ *         name: boardName
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: "my-dashboard"
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: "6100ffee863a269063ba0660"
+ *     responses:
+ *       200:
+ *         description: Column deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Column deleted successfully."
+ *       404:
+ *         description: Column or board not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Column or board not found"
+ *       401:
+ *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Not authorized"
+ */
+
+/**
+ * @swagger
+ * /api/boards/{boardName}/column/{id}/card:
+ *   post:
+ *     summary: Add a new card to a column
+ *     security: 
+ *       - bearerAuth: []
+ *     tags: [Cards]
+ *     parameters:
+ *       - in: path
+ *         name: boardName
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: "my-dashboard"
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: "670117b5863a269063ba0673"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: "project"
+ *               description:
+ *                 type: string
+ *                 example: "make swagger doc"
+ *               priority:
+ *                 type: string
+ *                 example: "medium"
+ *               deadline:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-06-10T00:00:00.000Z"
+ *     responses:
+ *       200:
+ *         description: Card created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 title:
+ *                   type: string
+ *                   example: "project"
+ *                 description:
+ *                   type: string
+ *                   example: "make swagger doc"
+ *                 priority:
+ *                   type: string
+ *                   example: "medium"
+ *                 deadline:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2024-06-10T00:00:00.000Z"
+ *                 columnId:
+ *                   type: string
+ *                   example: "670117b5863a269063ba0673"
+ *                 _id:
+ *                   type: string
+ *                   example: "67011ef8863a269063ba0689"
+ *       404:
+ *         description: Column or board not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Column or board not found"
+ *       401:
+ *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Not authorized"
+ */
+
+/**
+ * @swagger
+ * /api/boards/{boardName}/card/{id}:
+ *   patch:
+ *     summary: Update card details in a board
+ *     security: 
+ *       - bearerAuth: []
+ *     tags: [Cards]
+ *     parameters:
+ *       - in: path
+ *         name: boardName
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: "my-dashboard"
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: "67011ef8863a269063ba0689"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               priority:
+ *                 type: string
+ *                 example: "high"
+ *     responses:
+ *       200:
+ *         description: Card updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   example: "67011ef8863a269063ba0689"
+ *                 title:
+ *                   type: string
+ *                   example: "project"
+ *                 description:
+ *                   type: string
+ *                   example: "make swagger doc"
+ *                 priority:
+ *                   type: string
+ *                   example: "high"
+ *                 deadline:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2024-06-10T00:00:00.000Z"
+ *                 columnId:
+ *                   type: string
+ *                   example: "670117b5863a269063ba0673"
+ *       404:
+ *         description: Card or board not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Card or board not found"
+ *       401:
+ *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Not authorized"
+ */
+
+/**
+ * @swagger
+ * /api/boards/{boardName}/card/{id}:
+ *   delete:
+ *     summary: Delete a card
+ *     security: 
+ *       - bearerAuth: []
+ *     tags: [Cards]
+ *     parameters:
+ *       - in: path
+ *         name: boardName
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: "my-dashboard"
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         example: "6100ffee863a269063ba0660"
+ *     responses:
+ *       200:
+ *         description: Card deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Card deleted successfully."
+ *       404:
+ *         description: Column or board not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Column or board not found"
+ *       401:
+ *         description: Not authorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Not authorized"
+ */
+
+
 function moveElement(array, from, to) {
     if (from < 0) return;
     array.splice(to, 0, array.splice(from, 1)[0]);

@@ -7,6 +7,358 @@ const Card = require('../models/Card');
 const { dashboardSchema } = require('../validations/Board');
 const Joi = require('joi');
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Dashboard:
+ *       type: object
+ *       properties:
+ *         owner:
+ *           type: string
+ *           example: "60c72b2f4f1a2c001e6a5678"
+ *         name:
+ *           type: string
+ *           example: "My Dashboard"
+ *         slug:
+ *           type: string
+ *           example: "my-dashboard"
+ *         icon:
+ *           type: string
+ *           example: "icon_url"
+ *         backgroundImage:
+ *           type: string
+ *           example: "background_image_url"
+ *         columns:
+ *           type: array
+ *           items:
+ *             type: string
+ *       required:
+ *         - owner
+ *         - name
+ *       example:
+ *         owner: "60c72b2f4f1a2c001e6a5678"
+ *         name: "My Dashboard"
+ *         icon: "icon_url"
+ *         backgroundImage: "background_image_url"
+ *         columns: []
+ */
+
+/**
+ * @swagger
+ * /api/boards:
+ *   post:
+ *     summary: Create a new board
+ *     security: 
+ *        - bearerAuth : []
+ *     tags: [Dashboard]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: My Dashboard
+ *     responses:
+ *       200:
+ *         description: Board created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                     _id:
+ *                       type: string
+ *                       example: "60c72b2f4f1a2c001e6a1234"
+ *                     owner:
+ *                       type: string
+ *                       example: "60c72b2f4f1a2c001e6a5678"
+ *                     name:
+ *                       type: string
+ *                       example: "My Dashboard"
+ *                     columns:
+ *                       type: array
+ *                       example: []
+ *                     slug:
+ *                       type: string
+ *                       example: "my-dashboard"
+ *       400:
+ *         description: Invalid request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Request validation failed"
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Not authorized"
+ */
+
+/**
+ * @swagger
+ * /api/boards:
+ *   get:
+ *     summary: Get all boards
+ *     security: 
+ *        - bearerAuth : []
+ *     tags: [Dashboard]
+ *     responses:
+ *       200:
+ *         description: List of boards
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 dashboards:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         example: "60c72b2f4f1a2c001e6a1234"
+ *                       owner:
+ *                         type: string
+ *                         example: "60c72b2f4f1a2c001e6a5678"
+ *                       name:
+ *                         type: string
+ *                         example: "My Dashboard"
+ *                       columns:
+ *                         type: array
+ *                         example: []
+ *                       slug:
+ *                         type: string
+ *                         example: "my-dashboard"
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Not authorized"
+ */
+
+/**
+ * @swagger
+ * /api/boards/{boardName}:
+ *   patch:
+ *     summary: Update an existing board
+ *     security: 
+ *        - bearerAuth : []
+ *     tags: [Dashboard]
+ *     parameters:
+ *       - in: path
+ *         name: boardName
+ *         required: true
+ *         description: Name of the board
+ *         schema:
+ *           type: string
+ *           example: My Dashboard
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: New Dashboard Name
+ *               icon:
+ *                 type: string
+ *                 example: new_icon_url
+ *               backgroundImage:
+ *                 type: string
+ *                 example: new_background_image_url
+ *     responses:
+ *       200:
+ *         description: Board updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 board:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: "60c72b2f4f1a2c001e6a1234"
+ *                     owner:
+ *                       type: string
+ *                       example: "60c72b2f4f1a2c001e6a5678"
+ *                     name:
+ *                       type: string
+ *                       example: "New Dashboard Name"
+ *                     columns:
+ *                       type: array
+ *                       example: []
+ *                     icon:
+ *                       type: string
+ *                       example: "new_icon_url"
+ *                     backgroundImage:
+ *                       type: string
+ *                       example: "new_background_image_url"
+ *       404:
+ *         description: Board not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Board not found"
+ *       400:
+ *         description: Invalid request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Request validation failed"
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Not authorized"
+ */
+
+/**
+ * @swagger
+ * /api/boards/{boardName}:
+ *   delete:
+ *     summary: Delete an existing dashboard
+ *     security: 
+ *        - bearerAuth : []
+ *     tags: [Dashboard]
+ *     parameters:
+ *       - in: path
+ *         name: boardName
+ *         required: true
+ *         description: Name of the board
+ *         schema:
+ *           type: string
+ *           example: My Dashboard
+ *     responses:
+ *       200:
+ *         description: Dashboard deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Dashboard deleted successfully"
+ *       404:
+ *         description: Dashboard not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Dashboard not found"
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Not authorized"
+ */
+
+/**
+ * @swagger
+ * /api/boards/{boardName}:
+ *   get:
+ *     summary: Get a specific board
+ *     security: 
+ *        - bearerAuth : []
+ *     tags: [Dashboard]
+ *     parameters:
+ *       - in: path
+ *         name: boardName
+ *         required: true
+ *         description: Name of the board
+ *         schema:
+ *           type: string
+ *           example: My Dashboard
+ *     responses:
+ *       200:
+ *         description: Details of the board
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                     _id:
+ *                       type: string
+ *                       example: "60c72b2f4f1a2c001e6a1234"
+ *                     owner:
+ *                       type: string
+ *                       example: "60c72b2f4f1a2c001e6a5678"
+ *                     name:
+ *                       type: string
+ *                       example: "My Dashboard"
+ *                     columns:
+ *                       type: array
+ *                       example: []
+ *                     slug:
+ *                       type: string
+ *                       example: "my-dashboard"
+ *       404:
+ *         description: Dashboard not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Dashboard not found"
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Not authorized"
+ */
+
+
 const validate = schemas => (req, res, next) => {
     // const { body, params } = schemas
     for (const key of Object.keys(schemas)) {

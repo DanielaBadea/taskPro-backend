@@ -30,6 +30,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
  * /api/need-help:
  *   post:
  *     summary: Submit a help request
+ *     tags: [Help]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
